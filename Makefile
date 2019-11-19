@@ -2,7 +2,7 @@
 
 # Python version (python3 required).
 PYTHON := python3
-PIP_OPTIONS :=
+PIP_INSTALL := pip3 install
 
 # directory for virtual Python environment
 # (but re-use if already active):
@@ -42,6 +42,7 @@ Targets:
 	ocrd: installs only the virtual environment and OCR-D/core packages
 	modules: download all submodules to the managed revision
 	all: installs all executables of all modules
+	fix-pip: try to repair conflicting requirements
 	install-tesseract: download, build and install Tesseract
 	clean: removes the virtual environment directory
 	show: lists the venv path and all executables (to be) installed
@@ -50,7 +51,7 @@ Targets:
 Variables:
 	VIRTUAL_ENV: path to (re-)use for the virtual environment
 	PYTHON: name of the Python binary
-	PIP_OPTIONS: extra options to pass pip install like -q or -v
+	PIP_INSTALL: pass extra options to "pip install" like -q or -v
 EOF
 endef
 export HELP
@@ -97,12 +98,12 @@ $(OCRD_OCROPY): ocrd_ocropy
 .PHONY: ocrd
 ocrd: $(BIN)/ocrd
 $(BIN)/ocrd: core
-	. $(ACTIVATE_VENV) && cd $< && make install PIP_INSTALL="pip install --force-reinstall $(PIP_OPTIONS)"
+	. $(ACTIVATE_VENV) && cd $< && make install PIP_INSTALL="$(PIP_INSTALL) --force-reinstall"
 
 .PHONY: wheel
 wheel: $(BIN)/wheel
 $(BIN)/wheel: | $(ACTIVATE_VENV)
-	. $(ACTIVATE_VENV) && pip install --force-reinstall $(PIP_OPTIONS) wheel
+	. $(ACTIVATE_VENV) && $(PIP_INSTALL) --force-reinstall wheel
 
 # Install Python modules from local code.
 
@@ -244,18 +245,31 @@ $(BIN)/ocrd-make: workflow-configuration
 # install again forcefully without depds (to ensure
 # the binary itself updates):
 $(filter-out $(CUSTOM_INSTALL),$(OCRD_EXECUTABLES)):
-	. $(ACTIVATE_VENV) && cd $< && pip install $(PIP_OPTIONS) .
-	. $(ACTIVATE_VENV) && cd $< && pip install --no-deps --force-reinstall $(PIP_OPTIONS) .
+	. $(ACTIVATE_VENV) && cd $< && $(PIP_INSTALL) .
+	. $(ACTIVATE_VENV) && cd $< && $(PIP_INSTALL) --no-deps --force-reinstall .
 
 # avoid making these .PHONY so they do not have to be repeated:
 # clstm tesserocr
 $(SHARE)/%: % | $(ACTIVATE_VENV)
-	. $(ACTIVATE_VENV) && cd $< && pip install $(PIP_OPTIONS) .
+	. $(ACTIVATE_VENV) && cd $< && $(PIP_INSTALL) .
 	@touch $@
 
 # At last, add venv dependency (must not become first):
 $(OCRD_EXECUTABLES) $(BIN)/wheel: | $(ACTIVATE_VENV)
 $(OCRD_EXECUTABLES): | $(BIN)/wheel
+
+.PHONY: fix-pip
+# temporary workaround for conflicting requirements between modules:
+# - opencv-python instead of opencv-python-headless (which needs X11 libs)
+#   (pulled by OCR-D-LAYoutERkennung and segmentation-runner)
+# - tensorflow>=2.0, tensorflow_gpu in another version
+# - pillow==5.4.1 instead of >=6.2
+fix-pip:
+	$(PIP_INSTALL) --force-reinstall \
+		opencv-python-headless \
+		pillow>=6.2.0 \
+		$(pip list | grep tensorflow-gpu | sed -E 's/-gpu +/==/')
+
 
 # At last, we know what all OCRD_EXECUTABLES are:
 all: $(OCRD_EXECUTABLES)
@@ -318,6 +332,17 @@ $(BIN)/tesseract: tesseract/configure
 # suppress all built-in suffix rules:
 .SUFFIXES:
 
+# get the modules required by the given (1) executables
+define requires-modules
+$(shell LC_MESSAGES=C $(MAKE) -R -nd $(1) 2>&1 | \
+	fgrep -e 'Considering target file' -e 'Trying rule prerequisite' | \
+	cut -d\' -f2 | tr ' ' '\n' | fgrep -x $(OCRD_MODULES:%=-e %))
+endef
+# get only those (1) executables which depend on the given (2) set of allowed modules
+define filter-executables
+$(foreach tool, $(1), $(if $(filter-out $(2),$(call requires-modules, $(tool))),,$(tool)))
+endef
+
 # allow installing system dependencies for all modules
 # (mainly intended for docker, not recommended for live systems)
 # FIXME: we should find a way to filter based on the actual executables required
@@ -329,13 +354,13 @@ deps-ubuntu: $(CUSTOM_DEPS)
 .PHONY: docker
 docker: DOCKER_TAG ?= ocrd/all
 # opencv-python is not needed for Ubuntu x86_64
-docker: DOCKER_MODULES = $(filter-out opencv-python/,$(OCRD_MODULES))
+docker: DOCKER_MODULES ?= $(filter-out opencv-python/,$(OCRD_MODULES))
 # get all available processors
-docker: DOCKER_EXECUTABLES = $(OCRD_EXECUTABLES:$(BIN)/%=%)
+docker: DOCKER_EXECUTABLES ?= $(OCRD_EXECUTABLES:$(BIN)/%=%)
+docker: ALLOWED_EXECUTABLES = $(call filter-executables, $(DOCKER_EXECUTABLES), $(DOCKER_MODULES))
 docker: Dockerfile modules
 	docker build \
-	--build-arg OCRD_MODULES="$(DOCKER_MODULES)" \
-	--build-arg OCRD_EXECUTABLES="$(DOCKER_EXECUTABLES)" \
+	--build-arg OCRD_EXECUTABLES="$(ALLOWED_EXECUTABLES)" \
 	-t $(DOCKER_TAG) .
 
 # do not search for implicit rules here:
