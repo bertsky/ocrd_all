@@ -83,8 +83,8 @@ Targets (system dependencies, may need root privileges):
 	deps-ubuntu: install system dependencies
 
 Targets (build and installation into venv):
-	images: download/rebuild Docker images associated with submodules
-	all: install all executables of all modules/images
+	images: download or rebuild Docker images associated with submodules (see `DOCKER_PULL_POLICY`)
+	all: install all executables of all modules/images (see `DOCKER_RUN_OPTS`)
 	ocrd: only install the multi-purpose CLI of OCR-D/core
 	clean: remove the virtual environment directory
 	images-clean: remove the Docker images
@@ -104,10 +104,12 @@ Targets (auxiliary data):
 Variables:
 	OCRD_MODULES: selection of submodules to include. Default: all git submodules (see `show`)
 	DISABLED_MODULES: list of disabled modules. Default: "$(DISABLED_MODULES)"
-	DOCKER_PULL_POLICY: set to `build` to `docker build` instead of `docker pull` images
-	DOCKER_VOL_MODELS: name of named volume to be mounted for processor resources (see `init-vol-models`)
-	DOCKER_RUN_OPTS: additional options for `docker run` (volumes etc)
-	DOCKER_RUN_POLICY: set to `local` to `docker run` executables, or `client` to use ocrd_network
+	DOCKER_PULL_POLICY: use `build` or `pull` to get Docker images. Default: $(DOCKER_PULL_POLICY)
+	DOCKER_VOL_MODELS: name of Docker volume to be mounted for processor resources (see `init-vol-models`).
+	                   Default: "$(DOCKER_VOL_MODELS)"
+	DOCKER_RUN_OPTS: additional options for `docker run` (volumes like `DOCKER_VOL_MODELS`, user mapping etc.).
+                         Default: "$(DOCKER_RUN_OPTS)"
+	DOCKER_RUN_POLICY: behaviour of executables - set to `local` to use `docker run`, or `client` to use ocrd_network
 	                   (overrides auto-detection based on state after `network-setup` vs. `network-clean`)
 	GIT_RECURSIVE: set to `--recursive` to checkout/update all submodules recursively
 	GIT_DEPTH: set to `--depth 1` to truncate all history when cloning subrepos
