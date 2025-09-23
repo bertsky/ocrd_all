@@ -637,7 +637,7 @@ define pullpolicy_docker
 $(MAKE) -C $1 docker DOCKER_TAG=$2
 mkdir -p $(dir $2)
 @echo built: `date -Iseconds` > $2
-@echo tools: `jq -c ".tools|keys" $1/ocrd-tool.json` >> $2
+@echo tools: `$(PYTHON) -c "import json; print(json.dumps(list(json.load(open('$1/ocrd-tool.json'))['tools'])))"` >> $2
 @echo profiles: $(DOCKER_PROFILES) >> $2
 endef
 else
@@ -645,7 +645,7 @@ define pullpolicy_docker
 docker pull $2
 mkdir -p $(dir $2)
 @echo pulled: `date -Iseconds` > $2
-@echo tools: `jq -c ".tools|keys" $1/ocrd-tool.json` >> $2
+@echo tools: `$(PYTHON) -c "import json; print(json.dumps(list(json.load(open('$1/ocrd-tool.json'))['tools'])))"` >> $2
 @echo profiles: $(DOCKER_PROFILES) >> $2
 endef
 endif
