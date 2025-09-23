@@ -54,7 +54,7 @@ endif
 
 .PHONY: all modules clean help show check always-update install-models
 
-clean: network-clean images-clean
+clean: network-clean
 	$(RM) -r $(CURDIR)/venv # deliberately not using VIRTUAL_ENV here
 	$(RM) -r $(HOME)/.parallel/semaphores/id-ocrd_*
 	$(RM) ocrd-all-tool.json ocrd-all-module-dir.json ocrd-all-meta.json ocrd-all-images.yaml
@@ -86,8 +86,8 @@ Targets (build and installation into venv):
 	images: download/rebuild Docker images associated with submodules
 	all: install all executables of all modules/images
 	ocrd: only install the multi-purpose CLI of OCR-D/core
-	clean: remove the virtual environment directory and images
-	images-clean: remove only the Docker images
+	clean: remove the virtual environment directory
+	images-clean: remove the Docker images
 
 Targets (testing):
 	check: verify that all executables are runnable
