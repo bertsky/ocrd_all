@@ -171,7 +171,7 @@ tidy: clean
 %/bin/activate:
 	$(PYTHON) -m venv $(subst /bin/activate,,$@)
 	. $@ && pip install --upgrade pip setuptools wheel
-	. $@ && pip install click requests pyaml ocrd dotenv
+	. $@ && pip install click requests pyyaml ocrd dotenv
 
 # Install modules from source.
 
