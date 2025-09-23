@@ -89,16 +89,22 @@ Targets (build and installation into venv):
 	clean: remove the virtual environment directory
 	images-clean: remove the Docker images
 
+Targets (ocrd_network specific):
+	network-setup: generate `docker-compose.yml` and `.env` based on `OCRD_NETWORK_CONFIG`
+	network-start: alias for `docker compose up --wait --wait-timeout 30 -d`
+	network-stop: alias for `docker compose down`
+	network-clean: remove files generated during `network-setup`
+
 Targets (testing):
 	check: verify that all executables are runnable
 	test-cuda: verify that CUDA is available for Tensorflow and Pytorch
 	test-workflow: verify that most executables work correctly via test runs on test data
 
 Targets (auxiliary data):
-	ocrd-all-tool.json: generate union of ocrd-tool.json's tools section for all executables of all modules
-	ocrd-all-meta.json: map executable to ocrd-tool.json's metadata section for all executables of all modules
-	ocrd-all-images.yaml: list all OCRD_IMAGES in a file
-	init-vol-models: initialise shared Docker volume with files from module images but user permissions
+	ocrd-all-tool.json: generate union of ocrd-tool.json's tools section for all executables of all `OCRD_MODULES`
+	ocrd-all-meta.json: map executable to ocrd-tool.json's metadata section for all executables of all `OCRD_MODULES`
+	ocrd-all-images.yaml: list all `OCRD_IMAGES` in a file
+	init-vol-models: initialise shared Docker volume `DOCKER_VOL_MODELS` with files from module images but user permissions
 	install-models: download commonly used models to appropriate locations
 	clean-vol-models: remove shared Docker volume `DOCKER_VOL_MODELS`
 
@@ -112,6 +118,7 @@ Variables:
                          Default: "$(DOCKER_RUN_OPTS)"
 	DOCKER_RUN_POLICY: behaviour of executables - set to `local` to use `docker run`, or `client` to use ocrd_network
 	                   (overrides auto-detection based on state after `network-setup` vs. `network-clean`)
+	OCRD_NETWORK_CONFIG: configuration file for ocrd_network. Default: "$(OCRD_NETWORK_CONFIG)"
 	GIT_RECURSIVE: set to `--recursive` to checkout/update all submodules recursively
 	GIT_DEPTH: set to `--depth 1` to truncate all history when cloning subrepos
 	NO_UPDATE: set to `1` to omit git submodule sync and update
