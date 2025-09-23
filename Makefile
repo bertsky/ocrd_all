@@ -100,6 +100,7 @@ Targets (auxiliary data):
 	ocrd-all-images.yaml: list all OCRD_IMAGES in a file
 	init-vol-models: initialise shared Docker volume with files from module images but user permissions
 	install-models: download commonly used models to appropriate locations
+	clean-vol-models: remove shared Docker volume `DOCKER_VOL_MODELS`
 
 Variables:
 	OCRD_MODULES: selection of submodules to include. Default: all git submodules (see `show`)
@@ -664,9 +665,13 @@ show:
 
 show-%: ; @echo $($*)
 
+.PHONY: init-vol-models clean-vol-models
 init-vol-models: $(OCRD_IMAGES:%=init-vol-models/%)
 init-vol-models/%: %
 	$(call initmodels_docker,$*)
+
+clean-vol-models:
+	docker volume rm $(DOCKER_VOL_MODELS)
 
 check: $(OCRD_EXECUTABLES:%=%-check)
 
@@ -750,7 +755,7 @@ network-stop:
 	. $(ACTIVATE_VENV) && python run-network/creator.py stop
 network-clean:
 	$(RM) -r $(VIRTUAL_ENV) .env docker-compose.yml ocrd-processing-server-config.yaml
-	-docker volume rm $(DOCKER_VOL_MODELS)
+
 # do not search for implicit rules here:
 Makefile: ;
 local.mk: ;
