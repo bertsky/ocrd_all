@@ -189,7 +189,7 @@ OCRD_EXECUTABLES += $(BIN)/ocrd-process
 $(BIN)/ocrd-process: ocrd/core
 	. $(ACTIVATE_VENV) && python run-network/creator.py create-workflow-client $@
 ocrd/core: DOCKER_PROFILES =
-ocrd/core: $(CURDIR)/core
+ocrd/core: core
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -217,7 +217,7 @@ OCRD_IMAGES += ocrd/kraken
 $(OCRD_KRAKEN): ocrd/kraken
 	$(call delegate_docker,$@,$<)
 ocrd/kraken: DOCKER_PROFILES = maximum
-ocrd/kraken: $(CURDIR)/ocrd_kraken
+ocrd/kraken: ocrd_kraken
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -229,7 +229,7 @@ OCRD_IMAGES += ocrd/detectron2
 $(OCRD_DETECTRON2): ocrd/detectron2
 	$(call delegate_docker,$@,$<)
 ocrd/detectron2: DOCKER_PROFILES = maximum
-ocrd/detectron2: $(CURDIR)/ocrd_detectron2
+ocrd/detectron2: ocrd_detectron2
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -242,7 +242,7 @@ OCRD_IMAGES += ocrd/page2alto
 $(OCRD_PAGE_TO_ALTO): ocrd/page2alto
 	$(call delegate_docker,$@,$<)
 ocrd/page2alto: DOCKER_PROFILES =
-ocrd/page2alto: $(CURDIR)/ocrd_page2alto
+ocrd/page2alto: ocrd_page2alto
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -254,7 +254,7 @@ OCRD_IMAGES += ocrd/ocropy
 $(OCRD_OCROPY): ocrd/ocropy
 	$(call delegate_docker,$@,$<)
 ocrd/ocropy: DOCKER_PROFILES =
-ocrd/ocropy: $(CURDIR)/ocrd_ocropy
+ocrd/ocropy: ocrd_ocropy
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -275,7 +275,7 @@ OCRD_IMAGES += ocrd/cor-asv-ann
 $(OCRD_COR_ASV_ANN): ocrd/cor-asv-ann
 	$(call delegate_docker,$@,$<)
 ocrd/cor-asv-ann: DOCKER_PROFILES = medium maximum
-ocrd/cor-asv-ann: $(CURDIR)/cor-asv-ann
+ocrd/cor-asv-ann: cor-asv-ann
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -288,7 +288,7 @@ OCRD_IMAGES += ocrd/cor-asv-fst
 $(OCRD_COR_ASV_FST): ocrd/cor-asv-fst
 	$(call delegate_docker,$@,$<)
 ocrd/cor-asv-fst: DOCKER_PROFILES = maximum
-ocrd/cor-asv-fst: $(CURDIR)/cor-asv-fst
+ocrd/cor-asv-fst: cor-asv-fst
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -301,7 +301,7 @@ OCRD_IMAGES += ocrd/keraslm
 $(OCRD_KERASLM): DOCKER_PROFILES = medium, maximum
 $(OCRD_KERASLM): ocrd/keraslm
 	$(call delegate_docker,$@,$<)
-ocrd/keraslm: $(CURDIR)/ocrd_keraslm
+ocrd/keraslm: ocrd_keraslm
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -318,7 +318,7 @@ OCRD_IMAGES += ocrd/neat
 $(OCRD_NEAT): ocrd/neat
 	$(call delegate_docker,$@,$<)
 ocrd/neat: DOCKER_PROFILES = maximum
-ocrd/neat: $(CURDIR)/ocrd_neat
+ocrd/neat: ocrd_neat
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -334,7 +334,7 @@ OCRD_IMAGES += ocrd/wrap
 $(OCRD_WRAP): ocrd/wrap
 	$(call delegate_docker,$@,$<)
 ocrd/wrap: DOCKER_PROFILES =
-ocrd/wrap: $(CURDIR)/ocrd_wrap
+ocrd/wrap: ocrd_wrap
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -349,7 +349,7 @@ OCRD_IMAGES += ocrd/fileformat
 $(OCRD_FILEFORMAT): ocrd/fileformat
 	$(call delegate_docker,$@,$<)
 ocrd/fileformat: DOCKER_PROFILES =
-ocrd/fileformat: $(CURDIR)/ocrd_fileformat
+ocrd/fileformat: ocrd_fileformat
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -363,7 +363,7 @@ OCRD_IMAGES += ocrd/olena
 $(OCRD_OLENA): ocrd/olena
 	$(call delegate_docker,$@,$<)
 ocrd/olena: DOCKER_PROFILES = medium maximum
-ocrd/olena: $(CURDIR)/ocrd_olena
+ocrd/olena: ocrd_olena
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -379,7 +379,7 @@ OCRD_IMAGES += ocrd/dinglehopper
 $(OCRD_DINGLEHOPPER): ocrd/dinglehopper
 	$(call delegate_docker,$@,$<)
 ocrd/dinglehopper: DOCKER_PROFILES = medium maximum
-ocrd/dinglehopper: $(CURDIR)/dinglehopper
+ocrd/dinglehopper: dinglehopper
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -391,7 +391,7 @@ OCRD_IMAGES += ocrd/docstruct
 $(OCRD_DOCSTRUCT): ocrd/docstruct
 	$(call delegate_docker,$@,$<)
 ocrd/docstruct: DOCKER_PROFILES = medium maximum
-ocrd/docstruct: $(CURDIR)/docstruct
+ocrd/docstruct: docstruct
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -404,7 +404,7 @@ OCRD_IMAGES += ocrd/nmalign
 $(OCRD_NMALIGN): ocrd/nmalign
 	$(call delegate_docker,$@,$<)
 ocrd/nmalign: DOCKER_PROFILES = medium maximum
-ocrd/nmalign: $(CURDIR)/nmalign
+ocrd/nmalign: nmalign
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -429,7 +429,7 @@ OCRD_IMAGES += ocrd/segment
 $(OCRD_SEGMENT): ocrd/segment
 	$(call delegate_docker,$@,$<)
 ocrd/segment: DOCKER_PROFILES = medium maximum
-ocrd/segment: $(CURDIR)/ocrd_segment
+ocrd/segment: ocrd_segment
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -472,7 +472,7 @@ OCRD_IMAGES += ocrd/tesserocr
 $(OCRD_TESSEROCR): ocrd/tesserocr
 	$(call delegate_docker,$@,$<)
 ocrd/tesserocr: DOCKER_PROFILES =
-ocrd/tesserocr: $(CURDIR)/ocrd_tesserocr
+ocrd/tesserocr: ocrd_tesserocr
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -500,7 +500,7 @@ OCRD_IMAGES += ocrd/cis
 $(OCRD_CIS): ocrd/cis
 	$(call delegate_docker,$@,$<)
 ocrd/cis: DOCKER_PROFILES =
-ocrd/cis: $(CURDIR)/ocrd_cis
+ocrd/cis: ocrd_cis
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -513,7 +513,7 @@ OCRD_IMAGES += ocrd/pagetopdf
 $(OCRD_PAGETOPDF): ocrd/pagetopdf
 	$(call delegate_docker,$@,$<)
 ocrd/pagetopdf: DOCKER_PROFILES =
-ocrd/pagetopdf: $(CURDIR)/ocrd_pagetopdf
+ocrd/pagetopdf: ocrd_pagetopdf
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -530,7 +530,7 @@ OCRD_IMAGES += ocrd/calamari
 $(OCRD_CALAMARI): ocrd/calamari
 	$(call delegate_docker,$@,$<)
 ocrd/calamari: DOCKER_PROFILES = medium maximum
-ocrd/calamari: $(CURDIR)/ocrd_calamari
+ocrd/calamari: ocrd_calamari
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -543,7 +543,7 @@ OCRD_IMAGES += ocrd/anybaseocr
 $(OCRD_ANYBASEOCR): ocrd/anybaseocr
 	$(call delegate_docker,$@,$<)
 ocrd/anybaseocr: DOCKER_PROFILES = maximum
-ocrd/anybaseocr: $(CURDIR)/ocrd_anybaseocr
+ocrd/anybaseocr: ocrd_anybaseocr
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -555,7 +555,7 @@ OCRD_IMAGES += ocrd/froc
 $(OCRD_FROC): ocrd/froc
 	$(call delegate_docker,$@,$<)
 ocrd/froc: DOCKER_PROFILES = maximum
-ocrd/froc: $(CURDIR)/ocrd_froc
+ocrd/froc: ocrd_froc
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -567,7 +567,7 @@ OCRD_IMAGES += ocrd/doxa
 $(OCRD_DOXA): ocrd/doxa
 	$(call delegate_docker,$@,$<)
 ocrd/doxa: DOCKER_PROFILES = maximum
-ocrd/doxa: $(CURDIR)/ocrd_doxa
+ocrd/doxa: ocrd_doxa
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -585,7 +585,7 @@ OCRD_IMAGES += ocrd/eynollah
 $(EYNOLLAH_SEGMENT): ocrd/eynollah
 	$(call delegate_docker,$@,$<)
 ocrd/eynollah: DOCKER_PROFILES = maximum
-ocrd/eynollah: $(CURDIR)/eynollah
+ocrd/eynollah: eynollah
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -597,7 +597,7 @@ OCRD_IMAGES += ocrd/olahd-client
 $(OCRD_OLAHD_CLIENT): ocrd/olahd-client
 	$(call delegate_docker,$@,$<)
 ocrd/olahd-client: DOCKER_PROFILES =
-ocrd/olahd-client: $(CURDIR)/ocrd_olahd_client
+ocrd/olahd-client: ocrd_olahd_client
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -612,7 +612,7 @@ OCRD_IMAGES += ocrd/workflow-configuration
 $(WORKFLOW_CONFIGURATION): ocrd/workflow-configuration
 	$(call delegate_docker,$@,$<)
 ocrd/workflow-configuration: DOCKER_PROFILES =
-ocrd/workflow-configuration: $(CURDIR)/workflow-configuration
+ocrd/workflow-configuration: workflow-configuration
 	$(call pullpolicy_docker,$<,$@)
 endif
 
@@ -716,7 +716,7 @@ $(OCRD_EXECUTABLES:%=%-check):
 # offer abbreviated forms (just the CLI name in the PATH,
 # without its directory):
 .PHONY: $(OCRD_EXECUTABLES:$(BIN)/%=%)
-$(OCRD_EXECUTABLES:$(BIN)/%=%): %: $(BIN)/%
+$(filter-out $(OCRD_MODULES),$(OCRD_EXECUTABLES:$(BIN)/%=%)): %: $(BIN)/%
 
 $(OCRD_EXECUTABLES): $(ACTIVATE_VENV)
 
