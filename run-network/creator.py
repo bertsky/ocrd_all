@@ -355,7 +355,7 @@ MONGODB_TEMPLATE = """
 RABBITMQ_TEMPLATE = """
   ocrd-rabbitmq:
     container_name: ocrd-rabbitmq
-    image: rabbitmq:3-management
+    image: rabbitmq:4-management
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-admin}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS:-admin}
