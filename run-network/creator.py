@@ -299,6 +299,9 @@ PROCESSING_SERVER_TEMPLATE = """
       - OCRD_NETWORK_LOGS_ROOT_DIR=${{LOGS_DIR:-/data/logs}}
       - XDG_CONFIG_HOME=/usr/local/share/ocrd-resources
     command: ocrd network processing-server -a 0.0.0.0:8000 /data/ocrd-processing-server-config.yaml
+    depends_on:
+      - ocrd-mongodb
+      - ocrd-rabbitmq
     healthcheck:
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8000"]
       interval: 60s
